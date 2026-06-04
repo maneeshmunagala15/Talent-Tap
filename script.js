@@ -4,6 +4,7 @@ let talents = JSON.parse(localStorage.getItem('talents')) || [];
 // Display talents on page load
 document.addEventListener('DOMContentLoaded', () => {
   displayTalents();
+  updateTalentCount();
 });
 
 // Add a new talent
@@ -41,6 +42,7 @@ function addUser() {
   
   // Update display
   displayTalents();
+  updateTalentCount();
 }
 
 // Display all talents
@@ -55,18 +57,13 @@ function displayTalents() {
   
   talents.forEach(talent => {
     const li = document.createElement('li');
-    li.className = 'talent-item';
     li.innerHTML = `
       <div class="talent-content">
-        <div class="talent-header">
-          <strong>${escapeHtml(talent.name)}</strong>
-          <span class="talent-skill">💡 ${escapeHtml(talent.skill)}</span>
-        </div>
+        <div class="talent-name">${escapeHtml(talent.name)}</div>
+        <div class="talent-skill">💡 ${escapeHtml(talent.skill)}</div>
         <div class="talent-timestamp">${talent.timestamp}</div>
       </div>
-      <div class="talent-actions">
-        <button class="delete-btn" onclick="deleteTalent(${talent.id})">Delete</button>
-      </div>
+      <button class="delete-btn" onclick="deleteTalent(${talent.id})">Delete</button>
     `;
     list.appendChild(li);
   });
@@ -78,7 +75,14 @@ function deleteTalent(id) {
     talents = talents.filter(talent => talent.id !== id);
     saveTalents();
     displayTalents();
+    updateTalentCount();
   }
+}
+
+// Update talent count
+function updateTalentCount() {
+  const talentCount = document.getElementById('talentCount');
+  talentCount.textContent = talents.length;
 }
 
 // Save talents to localStorage
